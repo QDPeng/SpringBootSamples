@@ -1,0 +1,17 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8"/>
+    <title></title>
+    <style>
+        .red {
+            color: red;
+            font-size: 15px;
+        }
+    </style>
+</head>
+<body>
+Velocity模板
+<a href="${host}" class="${clz}">${host}</a>
+</body>
+</html>
