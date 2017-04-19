@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: producer
+  profiles:
+    active: dev
+
+server:
+  port: 8100

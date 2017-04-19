@@ -1,0 +1,30 @@
+.nav, .pagination, .carousel, .panel-title a { cursor: pointer; }
+
+body {
+    background-color: #cccccc;
+    font-family: Arial,Helvetica,sans-serif;
+}
+
+.app-title {
+    float: right;
+    margin: 0 0 30px 10px;
+}
+
+.message-input {
+    padding: 10px 10px 10px 10px;
+}
+
+.message-input .form-group {
+    padding-bottom: 5px;
+}
+
+.message-output {
+    /*padding: 10px;*/
+    /*margin: 10px;*/
+}
+
+.panel-body {
+    height: 300px;
+    overflow-y: scroll;
+    width: 100%;
+}

@@ -1,0 +1,165 @@
+<!doctype html>
+<html ng-app="Consumer">
+    <head>
+        <meta charset="utf-8"/>
+        <meta http-equiv="X-UA-Compatible" content="IE=edge"/>
+        <title>Kafka Demo - Consumer Component</title>
+        <meta name="description" content=""/>
+        <meta name="viewport" content="width=device-width"/>
+        <link rel="stylesheet" href="../static/styles/consumer-app.css" th:href="@{styles/consumer-app.css}"/>
+        <link rel="stylesheet" href="../static/styles/bootstrap.min.css" th:href="@{/styles/bootstrap.css}"/>
+        <link rel="stylesheet" href="../static/styles/bootstrap-theme.min.css" th:href="@{/styles/bootstrap-theme.css}"/>
+
+        <script src="../static/scripts/angular.js" th:src="@{scripts/angular.js}"/>
+        <script src="../static/scripts/ui-bootstrap-tpls-0.14.2.js" th:src="@{scripts/ui-bootstrap-tpls-0.14.2.js}"/>
+        <script src="../static/scripts/sockjs-1.0.3.js" th:src="@{scripts/sockjs-1.0.3.js}"/>
+        <script src="../static/scripts/stomp.js" th:src="@{scripts/stomp.js}"/>
+        <script src="../static/scripts/jquery-2.1.4.js" th:src="@{scripts/jquery-2.1.4.js}"/>
+        <script src="../static/scripts/consumer-app.js" th:src="@{scripts/consumer-app.js}"/>
+    </head>
+    <body>
+        <!--<div ng-controller="MainCtrl as main">-->
+        <div>
+            <div class="container-fluid">
+                <button id="stop">Stop</button>
+
+                <div class="app-title">
+                    <h2>Kafka Consumer</h2>
+                </div>
+                <div class="row">
+                    <div class="col-md-12">
+                        <div class="message-output row">
+                            <div class="col-md-6">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">topic-01 Topic Received Messages</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="topic-01"></div>
+                                        <!--<div ng-repeat="message in main.topic01Messages">-->
+                                            <!--<p>{{message.body}}</p>-->
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">topic-02 Topic Received Messages</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="topic-02"></div>
+                                        <!--<div ng-repeat="message in main.topic02Messages">-->
+                                            <!--<p>{{message.body}}</p>-->
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                        <div class="message-output row">
+                            <div class="col-md-6">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">topic-03 Topic Received Messages</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="topic-03"></div>
+                                        <!--<div ng-repeat="message in main.topic03Messages">-->
+                                            <!--<p>{{message.body}}</p>-->
+                                        <!--</div>-->
+                                    </div>
+                                </div>
+                            </div>
+                            <div class="col-md-6">
+                                <div class="panel panel-primary">
+                                    <div class="panel-heading">
+                                        <h3 class="panel-title">topic-04 Topic Received Messages</h3>
+                                    </div>
+                                    <div class="panel-body">
+                                        <div id="topic-04"></div>
+                                        <div ng-repeat="message in main.topic04Messages">
+                                            <p>{{message.body}}</p>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+
+                    </div>
+                </div>
+            </div>
+        </div>
+
+        <script th:inline="javascript">
+            var sock = new SockJS([[@{/kafka}]]);
+            var stomp = Stomp.over(sock);
+
+            stomp.connect('guest', 'guest', function(frame) {
+                console.log('*****  Connected  *****');
+                stomp.subscribe("/topic/topic-01", handleTopic01);
+                stomp.subscribe("/topic/topic-02", handleTopic02);
+                stomp.subscribe("/topic/topic-03", handleTopic03);
+                stomp.subscribe("/topic/topic-04", handleTopic04);
+                testTopic01();
+                testTopic02();
+                testTopic03();
+                testTopic04();
+            });
+
+            function handleOneTime(message) {
+                console.log('Received: ', message);
+            }
+
+            function handleTopic01(message) {
+                console.log('Received: ', message);
+                $('#topic-01').append("<b>Received: " + JSON.parse(message.body).message + "</b><br/>");
+                setTimeout(function(){testTopic01()}, 2000);
+            }
+            function handleTopic02(message) {
+                console.log('Received: ', message);
+                $('#topic-02').append("<b>Received: " + JSON.parse(message.body).message + "</b><br/>");
+                setTimeout(function(){testTopic02()}, 2000);
+            }
+            function handleTopic03(message) {
+                console.log('Received: ', message);
+                $('#topic-03').append("<b>Received: " + JSON.parse(message.body).message + "</b><br/>");
+                setTimeout(function(){testTopic03()}, 2000);
+            }
+            function handleTopic04(message) {
+                console.log('Received: ', message);
+                $('#topic-04').append("<b>Received: " + JSON.parse(message.body).message + "</b><br/>");
+                setTimeout(function(){testTopic04()}, 2000);
+            }
+
+            function handleErrors(message) {
+                console.log('RECEIVED ERROR: ', message);
+                $('#output').append("<b>GOT AN ERROR!!!: " +
+                        JSON.parse(message.body).message + "</b><br/>")
+            }
+
+            function testTopic01() {
+                console.log('Sending test to topic-01!');
+                stomp.send("/topic/topic-01", {}, JSON.stringify({ 'message': 'test for topic-01!' }));
+                $('#topic-01').append("<b>test for topic-01!</b><br/>")
+            }
+            function testTopic02() {
+                console.log('Sending test to topic-02!');
+                stomp.send("/topic/topic-02", {}, JSON.stringify({ 'message': 'test for topic-02!' }));
+                $('#topic-02').append("<b>test for topic-02!</b><br/>")
+            }
+            function testTopic03() {
+                console.log('Sending test to topic-03!');
+                stomp.send("/topic/topic-03", {}, JSON.stringify({ 'message': 'test for topic-03!' }));
+                $('#topic-03').append("<b>test for topic-03!</b><br/>")
+            }
+            function testTopic04() {
+                console.log('Sending test to topic-04!');
+                stomp.send("/topic/topic-04", {}, JSON.stringify({ 'message': 'test for topic-04!' }));
+                $('#topic-04').append("<b>test for topic-04!</b><br/>")
+            }
+
+            $('#stop').click(function() {sock.close()});
+        </script>
+    </body>
+</html>

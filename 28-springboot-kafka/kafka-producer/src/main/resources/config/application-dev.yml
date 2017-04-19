@@ -1,0 +1,21 @@
+spring:
+  thymeleaf:
+    cache: false
+
+zookeeper:
+  host: localhost
+  port: 2181
+  sessionTimeoutMs: 10000
+  connectionTimeoutMs: 10000
+
+kafka:
+  host: localhost
+  port: 9092
+  soTimeout: 100000
+  bufferSize: 65536
+  clientId: producer
+  serializerClass: kafka.serializer.StringEncoder
+  partitionerClass: com.penck.producer.service.SimplePartitioner
+  requestRequiredAcks: 1
+  numPartitions: 1
+  replicationFactor: 1
