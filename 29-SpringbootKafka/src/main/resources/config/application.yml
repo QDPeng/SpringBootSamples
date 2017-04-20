@@ -1,0 +1,8 @@
+spring:
+  application:
+    name: kafka
+  profiles:
+    active: dev
+
+server:
+  port: 8200
